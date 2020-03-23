@@ -1,11 +1,10 @@
-# React app
+🚦 A simple traffic light app just for fun
 
 ## Dependencies
 
-- React Router
-- Styled Components
-- Babel config
-- Prettier config
+-   Styled Components
+-   Babel config
+-   Prettier config
 
 ## Setup
 

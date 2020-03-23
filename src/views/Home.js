@@ -1,65 +1,41 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState } from 'react';
 import styled from 'styled-components';
-import LoremIpsum from '../components/Home.LoremIpsum';
 
-const isServiceWorkerRegistered = async serviceWorker => {
-    const registrations = await serviceWorker.getRegistrations();
-    return !!registrations.length > 0;
-};
+/*
+  traffic light: one light turned on at the time
+*/
 
-const registerServiceWorker = serviceWorker => {
-    serviceWorker.register('/service-worker.js');
-};
+const GRAY = 'gray';
 
-const unregisterServiceWorker = async serviceWorker => {
-    const registrations = await serviceWorker.getRegistrations();
-    for (let registration of registrations) {
-        registration.unregister();
-    }
-};
+const LIGHTS = [
+    'green',
+    'yellow',
+    'red',
+    'purple',
+    'brown',
+    'cyan',
+    'magenta',
+    'navy'
+];
 
-export default () => {
-    const [buttonLabel, setButtonLabel] = useState('click me');
-    const [offlineAccessEnabled, setOfflineAccessEnabled] = useState(false);
+const Light = styled.div`
+    background: ${props => props.color || GRAY};
+    cursor: pointer;
+`;
 
-    useEffect(() => {
-        async function getServiceWorkerRegistration() {
-            const serviceWorkerRegistered = await isServiceWorkerRegistered(
-                navigator.serviceWorker
-            );
-            setOfflineAccessEnabled(serviceWorkerRegistered);
-        }
-        getServiceWorkerRegistration();
-    });
-
+export default function App() {
+    const [trafficLight, setTrafficLight] = useState(null);
     return (
         <Fragment>
-            <Heading>Bonjour, monde.</Heading>
-            <LoremIpsum />
-            <div data-testid="emoji">😊</div>
-            <button onClick={() => setButtonLabel('clicked!')}>
-                {buttonLabel}
-            </button>
-            <label>
-                <input
-                    type="checkbox"
-                    checked={offlineAccessEnabled}
-                    onChange={async () => {
-                        const updatedOfflineAccessEnabled = !offlineAccessEnabled;
-                        if (updatedOfflineAccessEnabled) {
-                            registerServiceWorker(navigator.serviceWorker);
-                        } else {
-                            unregisterServiceWorker(navigator.serviceWorker);
-                        }
-                        setOfflineAccessEnabled(updatedOfflineAccessEnabled);
-                    }}
-                />
-                Service worker
-            </label>
+            {LIGHTS.map(color => (
+                <Light
+                    key={color}
+                    color={trafficLight === color ? color : undefined}
+                    onClick={() => setTrafficLight(color)}
+                >
+                    {color}
+                </Light>
+            ))}
         </Fragment>
     );
-};
-
-const Heading = styled.h1`
-    border-bottom: 1px;
-`;
+}
